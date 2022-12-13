@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+from sys import byteorder
+
 p10 = ( 3, 5, 2, 7, 4, 10, 1, 9, 8, 6 )
 p8 = ( 6, 3, 7, 4, 8, 5, 10, 9 )
 
@@ -128,13 +130,26 @@ if __name__ == "__main__":
     # test = binList(0b10101001, 8)
     # k1 = binList(0b10100100, 8)
     # print(fk(test, k1))
-    input = 0b10101010 # 170
-    key = 0b0000000000
+    usrin = input("Enter the password to save: ")
+    key = input("Enter your secure key (0 - 1023): ")
     
-    ct = encrypt(input, key)
+    ct = []
+    for char in usrin:
+        ct.append(encrypt(ord(char), int(key)))
     
-    print(f"cipher text = {format(ct, '#010b')}")
+    with open("database.key", "wb") as f:
+        for val in ct:
+            print(f"val = {val}")
+            print(format(val, '#010b'))
+            f.write(val.to_bytes(1, byteorder='big'))
     
-    pt = decrypt(ct, key)
-    
-    print(f"plain text = {format(pt, '#010b')}")
+    pt = ''
+    with open("database.key", "rb") as f:
+        byte = f.read(1)
+        while byte != b"":
+            val = int.from_bytes(byte, byteorder='big')
+            print(f"byte = {val}")
+            pt += chr(decrypt(val, int(key)))
+            byte = f.read(1)
+
+    print(f"Plain text = {pt}")
