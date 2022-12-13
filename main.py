@@ -127,9 +127,6 @@ def decrypt(input, key):
     return int(res, 2)
 
 if __name__ == "__main__":
-    # test = binList(0b10101001, 8)
-    # k1 = binList(0b10100100, 8)
-    # print(fk(test, k1))
     usrin = input("Enter the password to save: ")
     key = input("Enter your secure key (0 - 1023): ")
     
@@ -140,7 +137,6 @@ if __name__ == "__main__":
     with open("database.key", "wb") as f:
         for val in ct:
             print(f"val = {val}")
-            print(format(val, '#010b'))
             f.write(val.to_bytes(1, byteorder='big'))
     
     pt = ''
